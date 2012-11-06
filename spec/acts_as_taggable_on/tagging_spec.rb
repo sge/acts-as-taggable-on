@@ -12,7 +12,7 @@ describe ActsAsTaggableOn::Tagging do
     @tagging.context = "tags"
 
     @tagging.should_not be_valid
-    
+
     @tagging.errors[:tag_id].should == ["can't be blank"]
   end
 
@@ -24,5 +24,15 @@ describe ActsAsTaggableOn::Tagging do
       2.times { ActsAsTaggableOn::Tagging.create(:taggable => @taggable, :tag => @tag, :context => 'tags') }
     }.should change(ActsAsTaggableOn::Tagging, :count).by(1)
   end
-  
+
+  it "should have a counter cache for tags" do
+    @taggable = TaggableModel.create(:name => "Bob Jones")
+    @tag = ActsAsTaggableOn::Tag.create(:name => "awesome")
+
+    lambda {
+      ActsAsTaggableOn::Tagging.create(:taggable => @taggable, :tag => @tag, :context => 'tags')
+      @tag.reload
+    }.should change(@tag, :taggings_count).from(0).to(1)
+  end
+
 end

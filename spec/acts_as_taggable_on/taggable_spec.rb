@@ -5,7 +5,7 @@ describe "Taggable To Preserve Order" do
     clean_database!
     @taggable = OrderedTaggableModel.new(:name => "Bob Jones")
   end
-  
+
   it "should have tag types" do
     [:tags, :colours].each do |type|
       OrderedTaggableModel.tag_types.should include type
@@ -13,21 +13,21 @@ describe "Taggable To Preserve Order" do
 
     @taggable.tag_types.should == OrderedTaggableModel.tag_types
   end
-  
+
   it "should have tag associations" do
     [:tags, :colours].each do |type|
       @taggable.respond_to?(type).should be_true
       @taggable.respond_to?("#{type.to_s.singularize}_taggings").should be_true
     end
   end
-  
+
   it "should have tag associations ordered by id" do
     [:tags, :colours].each do |type|
       OrderedTaggableModel.reflect_on_association(type).options[:order].should include('id')
       OrderedTaggableModel.reflect_on_association("#{type.to_s.singularize}_taggings".to_sym).options[:order].should include('id')
     end
   end
-  
+
   it "should have tag methods" do
     [:tags, :colours].each do |type|
       @taggable.respond_to?("#{type.to_s.singularize}_list").should be_true
@@ -40,69 +40,69 @@ describe "Taggable To Preserve Order" do
     # create
     @taggable.tag_list = "rails, ruby, css"
     @taggable.instance_variable_get("@tag_list").instance_of?(ActsAsTaggableOn::TagList).should be_true
-    
+
     lambda {
       @taggable.save
     }.should change(ActsAsTaggableOn::Tag, :count).by(3)
-    
+
     @taggable.reload
     @taggable.tag_list.should == %w(rails ruby css)
-    
+
     # update
     @taggable.tag_list = "pow, ruby, rails"
     @taggable.save
-        
+
     @taggable.reload
     @taggable.tag_list.should == %w(pow ruby rails)
-    
+
     # update with no change
     @taggable.tag_list = "pow, ruby, rails"
     @taggable.save
-        
+
     @taggable.reload
     @taggable.tag_list.should == %w(pow ruby rails)
-    
+
     # update to clear tags
     @taggable.tag_list = ""
     @taggable.save
-        
+
     @taggable.reload
     @taggable.tag_list.should == []
   end
-  
+
   it "should return tag objects in the order the tags were created" do
     # create
     @taggable.tag_list = "pow, ruby, rails"
     @taggable.instance_variable_get("@tag_list").instance_of?(ActsAsTaggableOn::TagList).should be_true
-    
+
     lambda {
       @taggable.save
     }.should change(ActsAsTaggableOn::Tag, :count).by(3)
-    
+
     @taggable.reload
     @taggable.tags.map{|t| t.name}.should == %w(pow ruby rails)
-    
+
     # update
     @taggable.tag_list = "rails, ruby, css, pow"
     @taggable.save
-    
+
     @taggable.reload
     @taggable.tags.map{|t| t.name}.should == %w(rails ruby css pow)
   end
-  
+
   it "should return tag objects in tagging id order" do
     # create
     @taggable.tag_list = "pow, ruby, rails"
     @taggable.save
-    
+
     @taggable.reload
     ids = @taggable.tags.map{|t| t.taggings.first.id}
     ids.should == ids.sort
-    
+
     # update
     @taggable.tag_list = "rails, ruby, css, pow"
     @taggable.save
-    
+
     @taggable.reload
     ids = @taggable.tags.map{|t| t.taggings.first.id}
     ids.should == ids.sort
@@ -257,8 +257,8 @@ describe "Taggable" do
       TaggableModel.tagged_with("ruby").first.should_not be_readonly
     end
   else
-    xit "should not return read-only records" do
-      # apparantly, there is no way to set readonly to false in a scope if joins are made
+    it "should not return read-only records" do
+      pending "apparantly, there is no way to set readonly to false in a scope if joins are made"
     end
 
     it "should be possible to return writable records" do
@@ -417,7 +417,7 @@ describe "Taggable" do
 
   describe "grouped_column_names_for method" do
     it "should return all column names joined for Tag GROUP clause" do
-      @taggable.grouped_column_names_for(ActsAsTaggableOn::Tag).should == "tags.id, tags.name, tags.taggings_count""
+      @taggable.grouped_column_names_for(ActsAsTaggableOn::Tag).should == "tags.id, tags.name, tags.taggings_count"
     end
 
     it "should return all column names joined for TaggableModel GROUP clause" do

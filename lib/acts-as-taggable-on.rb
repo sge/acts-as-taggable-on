@@ -1,7 +1,6 @@
 require "active_support/core_ext/module/attribute_accessors"
 require "active_record"
 require "active_record/version"
-require "action_view"
 
 require "digest/sha1"
 
@@ -47,7 +46,6 @@ require "acts_as_taggable_on/acts_as_taggable_on/dirty"
 require "acts_as_taggable_on/tagger"
 require "acts_as_taggable_on/tag"
 require "acts_as_taggable_on/tag_list"
-require "acts_as_taggable_on/tags_helper"
 require "acts_as_taggable_on/tagging"
 
 $LOAD_PATH.shift
@@ -57,8 +55,3 @@ if defined?(ActiveRecord::Base)
   ActiveRecord::Base.extend ActsAsTaggableOn::Taggable
   ActiveRecord::Base.send :include, ActsAsTaggableOn::Tagger
 end
-
-if defined?(ActionView::Base)
-  ActionView::Base.send :include, ActsAsTaggableOn::TagsHelper
-end
-

@@ -6,11 +6,13 @@ Gem::Specification.new do |gem|
   gem.authors = ["Michael Bleigh"]
   gem.date = %q{2012-07-16}
   gem.description = %q{With ActsAsTaggableOn, you can tag a single model on several contexts, such as skills, interests, and awards. It also provides other advanced functionality.}
-  gem.summary = "Advanced tagging for Rails."
+  gem.summary = "Advanced tagging for ActiveRecord."
   gem.email = %q{michael@intridea.com}
   gem.homepage      = ''
 
-  gem.add_runtime_dependency 'rails', '~> 4.0.0.beta'
+  gem.add_runtime_dependency 'activesupport', '>3'
+  gem.add_runtime_dependency 'activerecord', '>3'
+
   gem.add_development_dependency 'rspec', '~> 2.6'
   #gem.add_development_dependency 'ammeter', '~> 0.1.3'
   gem.add_development_dependency 'sqlite3'
